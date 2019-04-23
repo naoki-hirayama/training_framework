@@ -2,6 +2,8 @@
 
 class StatusController extends Controller
 {
+    protected $auth_actions = ['index', 'post'];
+
     public function indexAction()
     {
         $user = $this->session->get('user');
@@ -27,7 +29,7 @@ class StatusController extends Controller
 
         $body = $this->request->getPost('body');
 
-        $errors = array();
+        $errors = [];
 
         if (!strlen($body)) {
             $errors[] = 'ひとことを入力してください';
@@ -49,7 +51,56 @@ class StatusController extends Controller
             'errors'   => $errors,
             'body'     => $body,
             'statuses' => $statuses,
-            '_token'   => $this->generateCsrfToken('status/post'), 'index'
+            '_token'   => $this->generateCsrfToken('status/post'), 
         ), 'index');
+    }
+
+    function userAction($params)
+    {
+        $user = $this->db_manager->get('User')->fetchByUserName($params['user_name']);
+        if (!$user) {
+            $this->forward404();
+        }
+
+        $statuses = $this->db_manager->get('Status')->fetchAllByUserId($user['id']);
+
+        $following = null;
+        if ($this->session->isAuthenticated()) {
+            $my = $this->session->get('user');
+            if ($my['id'] !== $user['id']) {
+                $following = $this->db_manager->get('Following')->isFollowing($my['id'], $user['id']);
+            }
+        }
+
+        return $this->render(array(
+            'user'     => $user,
+            'statuses' => $statuses,
+            'following' => $following,
+            '_token' => $this->generateCsrfToken('account/follow'),
+        ));
+    }
+
+    public function showAction($params)
+    {
+        $status = $this->db_manager->get('Status')->fetchByIdAndUserName($params['id'], $params['user_name']);
+
+        if (!$status) {
+            $this->forward404();
+        }
+
+        return $this->render(array('status' => $status));
+    }
+
+    public function signinAction()
+    {
+        if ($this->session->isAuthenticated()) {
+            return $this->redirect('/account');
+        }
+
+        return $this->render(array(
+            'user_name' => '',
+            'password'  => '',
+            '_token'    => $this->generateCsrfToken('account/signin'),
+        ));
     }
 }
