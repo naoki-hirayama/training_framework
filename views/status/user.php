@@ -2,8 +2,6 @@
 
 <h2><?php echo $this->escape($user['user_name']) ?></h2>
 
-<!-- 写真表示 -->
-<?php var_dump($statuses); ?>
 <?php if (!is_null($following)) : ?>
     <?php if ($following) : ?>
         <P>フォローしてます</P>
@@ -20,3 +18,4 @@
         <?php echo $this->render('status/status', array('status' => $status)) ?>
     <?php endforeach ?>
 </div>
+

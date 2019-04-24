@@ -16,7 +16,7 @@ class AccountController extends Controller
             '_token' => $this->generateCsrfToken('account/signup'),
         ));
     }
-
+    //登録
     public function registerAction()
     {
         if ($this->session->isAuthenticated()) {
@@ -27,7 +27,7 @@ class AccountController extends Controller
             $this->foward404();
         }
 
-        $token = $this->request->getPost('_token');
+        $token = $this->requ9est->getPost('_token');
         if (!$this->checkCsrfToken('account/signup', $token)) {
             return $this->redirect('/account/signup');
         }
@@ -93,7 +93,7 @@ class AccountController extends Controller
             '_token'    => $this->generateCsrfToken('account/signin'),
         ));
     }
-
+    //login
     public function authenticateAction()
     {
         if ($this->session->isAuthenticated()) {

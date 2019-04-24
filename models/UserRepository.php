@@ -15,6 +15,17 @@ class UserRepository extends DbRepository
             ':created_at' => $now->format('Y-m-d H:i:s'),
         ));
     }
+    //パスワード 変更
+    public function changePassword($user_name, $password)
+    {
+        $password = $this->hashPassword($password);
+        $sql = 'UPDATE user SET password = :password WHERE user_name = :user_name';
+
+        $stmt = $this->execute($sql, array(
+            ':user_name' => $user_name,
+            ':password' => $password,
+        ));
+    }
 
     public function hashPassword($password)
     {

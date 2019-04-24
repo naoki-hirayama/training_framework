@@ -86,7 +86,7 @@ class Request
      * @return string
      */
     public function getRequestUri()
-    {
+    {   
         return $_SERVER['REQUEST_URI'];
     }
 
@@ -125,7 +125,7 @@ class Request
         }
 
         $path_info = (string)substr($request_uri, strlen($base_url));
-
+        
         return $path_info;
     }
 }

@@ -24,6 +24,7 @@ class Router
      *
      * @param array $definitions
      * @return array
+     * //definitions  定義
      */
     public function compileRoutes($definitions)
     {
