@@ -6,7 +6,7 @@ class StatusRepository extends DbRepository
     {
         $now = new DateTime();
 
-        $sql = 'INSERT INTO status(user_id,body,created_at) VALUES(:user_id, :body, :created_at)';
+        $sql = 'INSERT INTO status(user_id, body, created_at) VALUES(:user_id, :body, :created_at)';
 
         $stmt = $this->execute($sql, array(
             ':user_id'    => $user_id,
@@ -14,13 +14,15 @@ class StatusRepository extends DbRepository
             ':created_at' => $now->format('Y-m_d H:i:s'),
         ));
     }
-
+    //全ての投稿を取得(トータルのレコードを取得)
     public function fetchAllPersonalArchivesByUserId($user_id)
     {
-        $sql = 'SELECT a.*,u.user_name FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id OR u.id = :user_id  ORDER BY a.created_at DESC';
+        $sql = 'SELECT a.*,u.user_name FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id WHERE f.user_id = :user_id OR u.id = :user_id ORDER BY a.created_at DESC';
 
         return $this->fetchAll($sql, array(':user_id' => $user_id));
     }
+    //ページ毎のレコードを取得 Archives文書
+    //public function fetchPerPagePersonalArchivesByUserId($user_id)
 
     public function fetchAllByUserId($user_id)
     {

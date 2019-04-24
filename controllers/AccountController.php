@@ -2,7 +2,7 @@
 
 class AccountController extends Controller
 {
-    protected $auth_actions = ['index', 'signout', 'follow'];
+    protected $auth_actions = ['index', 'signout', 'follow']; //change_password
 
     public function signupAction()
     {
@@ -22,7 +22,7 @@ class AccountController extends Controller
         if ($this->session->isAuthenticated()) {
             return $this->redirect('/account');
         }
-        
+
         if (!$this->request->isPost()) {
             $this->foward404();
         }
@@ -168,7 +168,7 @@ class AccountController extends Controller
             return $this->redirect('/user/' . $following_name);
         }
 
-        $follow_user = $this->db_manager->get('User')->fethByUserName($following_name);
+        $follow_user = $this->db_manager->get('User')->fetchByUserName($following_name);
 
         if (!$follow_user) {
             $this->forward404();
