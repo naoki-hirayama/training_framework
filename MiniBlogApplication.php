@@ -14,7 +14,7 @@ class MiniBlogApplication extends Application
         return array(
             '/' => array( 'controller' => 'status', 'action' => 'index'),
 
-            //'/:page' => array('controller' => 'status', 'action' => 'index'),
+            '/:page' => array('controller' => 'status', 'action' => 'index'),
             //コメントアウト外すと/accountが表示されない
 
             '/status/post' => array('controller' => 'status', 'action' => 'post'),

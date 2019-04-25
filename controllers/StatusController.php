@@ -11,9 +11,9 @@ class StatusController extends Controller
         $user = $this->session->get('user');
         //$statuses = $this->db_manager->get('Status')->fetchAllPersonalArchivesByUserId($user['id']);
         $total_records = $this->db_manager->get('Status')->fetchCountAllPersonalArchivesByUserId($user['id']);
-        
+        var_dump($total_records);
         $max_pager_range = 4;
-        $per_page_records = 3;
+        $per_page_records = 5;
         if (isset( $params['page'])) {
             $page = $params['page'];
         } else {
@@ -26,16 +26,17 @@ class StatusController extends Controller
         $per_page_records = $pager->getPerPageRecords();
         $statuses = $this->db_manager->get('Status')->fetchPerPagePersonalArchivesByUserIdAndOffsetAndLimit($user['id'], $offset, $per_page_records);
 
-        $has_previous_page = $pager->hasPreviousPage();
-        $has_next_page = $pager->hasNextPage();
+        // $has_previous_page = $pager->hasPreviousPage();
+        // $has_next_page = $pager->hasNextPage();
 
-        $previous_page = $pager->getPreviousPage();
-        $next_page = $pager->getNextPage();
+        // $previous_page = $pager->getPreviousPage();
+        // $next_page = $pager->getNextPage();
 
         return $this->render(array(
             'statuses' => $statuses,
             'body'     => '',
             '_token'   => $this->generateCsrfToken('status/post'),
+            'pager'    => $pager,
         ));
     }
 
