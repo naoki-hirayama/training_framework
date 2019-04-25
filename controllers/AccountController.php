@@ -2,7 +2,7 @@
 
 class AccountController extends Controller
 {
-    protected $auth_actions = ['index', 'signout', 'follow', 'change_password']; //change_password
+    protected $auth_actions = ['index', 'signout', 'follow', 'change_password']; 
 
     public function signupAction()
     {
@@ -196,6 +196,12 @@ class AccountController extends Controller
         $current_password = $this->request->getPost('current_password');
         $new_password = $this->request->getPost('new_password');
         $confirm_password = $this->request->getPost('confirm_password');
+        //?
+        // $token = $this->request->getPost('_token');
+        // var_dump($token);exit;
+        // if (!$this->checkCsrfToken('change/password', $token)) {
+        //     return $this->redirect('/');
+        // }
         
         $errors = [];
         if ($user['password'] !== $user_repository->hashPassword($current_password)) {
@@ -213,10 +219,10 @@ class AccountController extends Controller
             return $this->redirect('/account/detail');
         }
         //viewでエラー表示
-        // return $this->render(array(
-        //     'errors' => $errors,
-        //     '_token' => $this->generateCsrfToken('account/signin'),
-        // ), 'signin');
+        return $this->render(array(
+            'errors' => $errors,
+            'password'  => '',
+        ));
     }
 
    
