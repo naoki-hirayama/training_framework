@@ -212,7 +212,7 @@ class AccountController extends Controller
             $user_repository->changePassword($user['user_name'], $new_password);
             return $this->redirect('/account/detail');
         }
-
+        //viewでエラー表示
         // return $this->render(array(
         //     'errors' => $errors,
         //     '_token' => $this->generateCsrfToken('account/signin'),
