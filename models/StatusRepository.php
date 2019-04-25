@@ -15,12 +15,12 @@ class StatusRepository extends DbRepository
         ));
     }
     //全ての投稿を取得 
-    public function fetchAllPersonalArchivesByUserId($user_id)
-    {
-        $sql = 'SELECT a.*,u.user_name FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id WHERE f.user_id = :user_id OR u.id = :user_id ORDER BY a.created_at DESC';
+    // public function fetchAllPersonalArchivesByUserId($user_id)
+    // {
+    //     $sql = 'SELECT a.*,u.user_name FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id WHERE f.user_id = :user_id OR u.id = :user_id ORDER BY a.created_at DESC';
 
-        return $this->fetchAll($sql, array(':user_id' => $user_id));
-    }
+    //     return $this->fetchAll($sql, array(':user_id' => $user_id));
+    // }
 
     //ページごとの投稿を取得　別のメソッド作成
     public function fetchPerPagePersonalArchivesByUserIdAndOffsetAndLimit($user_id, $offset, $limit)
@@ -31,10 +31,10 @@ class StatusRepository extends DbRepository
             ':user_id' => $user_id,
             ':offset'  => $offset,
             ':limit'   => $limit,
-            //sql文はOK数字が文字列に変換されてエラー
+            //数字が文字列に変換されてエラー
         ));
     }
-    //全ての投稿の数を取得 
+    //投稿の数を取得 
     public function fetchCountAllPersonalArchivesByUserId($user_id)
     {
         $sql = 'SELECT COUNT(*) FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id WHERE f.user_id = :user_id OR u.id = :user_id';

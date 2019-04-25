@@ -9,7 +9,7 @@ class StatusController extends Controller
         $user = $this->session->get('user');
         //$statuses = $this->db_manager->get('Status')->fetchAllPersonalArchivesByUserId($user['id']);
         $total_records = $this->db_manager->get('Status')->fetchCountAllPersonalArchivesByUserId($user['id']);
-        var_dump($total_records);
+        
         $max_pager_range = 4;
         $per_page_records = 5;
         if (isset( $params['page'])) {
@@ -17,18 +17,14 @@ class StatusController extends Controller
         } else {
             $page = 1;
         }
-        
+
+        //var_dump($_SESSION);
+
         $pager = new Pager($total_records, $max_pager_range, $per_page_records);
         $pager->setCurrentPage($page);
         $offset = $pager->getOffset();
         $per_page_records = $pager->getPerPageRecords();
         $statuses = $this->db_manager->get('Status')->fetchPerPagePersonalArchivesByUserIdAndOffsetAndLimit($user['id'], $offset, $per_page_records);
-
-        // $has_previous_page = $pager->hasPreviousPage();
-        // $has_next_page = $pager->hasNextPage();
-
-        // $previous_page = $pager->getPreviousPage();
-        // $next_page = $pager->getNextPage();
 
         return $this->render(array(
             'statuses' => $statuses,
@@ -67,12 +63,10 @@ class StatusController extends Controller
         }
 
         $user = $this->session->get('user');
-        $statuses = $this->db_manager->get('Status')->fetchAllPersonalArchivesByUserId($user['id']);
 
         return $this->render(array(
             'errors'   => $errors,
             'body'     => $body,
-            'statuses' => $statuses,
             '_token'   => $this->generateCsrfToken('status/post'), 
         ), 'index');
     }

@@ -2,12 +2,12 @@
 
 class AccountController extends Controller
 {
-    protected $auth_actions = ['index', 'signout', 'follow']; //change_password
+    protected $auth_actions = ['index', 'signout', 'follow', 'change_password']; //change_password
 
     public function signupAction()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            return $this->redirect('/account/detail');
         }
 
         return $this->render(array(
@@ -20,14 +20,14 @@ class AccountController extends Controller
     public function registerAction()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            return $this->redirect('/account/detail');
         }
 
         if (!$this->request->isPost()) {
             $this->foward404();
         }
 
-        $token = $this->requ9est->getPost('_token');
+        $token = $this->request->getPost('_token');
         if (!$this->checkCsrfToken('account/signup', $token)) {
             return $this->redirect('/account/signup');
         }
@@ -84,7 +84,7 @@ class AccountController extends Controller
     public function signinAction()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            return $this->redirect('/account/detail');
         }
 
         return $this->render(array(
@@ -97,7 +97,7 @@ class AccountController extends Controller
     public function authenticateAction()
     {
         if ($this->session->isAuthenticated()) {
-            return $this->redirect('/account');
+            return $this->redirect('/account/detail');
         }
 
         if (!$this->request->isPost()) {
@@ -125,7 +125,7 @@ class AccountController extends Controller
         if (count($errors) === 0) {
             $user_repository = $this->db_manager->get('User');
             $user = $user_repository->fetchByUserName($user_name);
-
+            
             if (!$user || ($user['password'] !== $user_repository->hashPassword($password))) {
                 $errors[] = 'ユーザーiDかパスワード が不正です';
             } else {
@@ -181,7 +181,42 @@ class AccountController extends Controller
             $following_repository->insert($user['id'], $follow_user['id']);
         }
 
-        return $this->redirect('/account');
+        return $this->redirect('/account/detail');
+    }
+
+    public function changePasswordAction()
+    {
+        if (!$this->request->isPost()) {
+            $this->forward404();
+        }
+
+        $user_repository = $this->db_manager->get('User');
+        $user = $this->session->get('user');
+
+        $current_password = $this->request->getPost('current_password');
+        $new_password = $this->request->getPost('new_password');
+        $confirm_password = $this->request->getPost('confirm_password');
+        
+        $errors = [];
+        if ($user['password'] !== $user_repository->hashPassword($current_password)) {
+            $errors[] = "パスワードが間違っています。";
+        } else {
+            if ($new_password !== $confirm_password) {
+                $errors[] = '確認パスワードが一致しません';
+            } elseif (strlen($new_password) < 4 || strlen($new_password) > 30) {
+                $errors[] = 'パスワード は４〜30字以内で入力してください';
+            }
+        }
+        
+        if (count($errors) === 0) {
+            $user_repository->changePassword($user['user_name'], $new_password);
+            return $this->redirect('/account/detail');
+        }
+
+        // return $this->render(array(
+        //     'errors' => $errors,
+        //     '_token' => $this->generateCsrfToken('account/signin'),
+        // ), 'signin');
     }
 
    

@@ -23,11 +23,13 @@ class MiniBlogApplication extends Application
 
             '/user/:user_name/status/:id' => array('controller' => 'status', 'action' => 'show'),
 
-            '/account' => array('controller' => 'account', 'action' => 'index'),
+            '/account/detail' => array('controller' => 'account', 'action' => 'index'),
 
             '/account/:action' => array('controller' => 'account'),
 
-            '/follow' => array('controller' => 'account', 'action' => 'follow'),
+            '/follow/user' => array('controller' => 'account', 'action' => 'follow'),
+
+            '/change/password' => array('controller' => 'account', 'action' => 'changePassword'),
         );
     }
 

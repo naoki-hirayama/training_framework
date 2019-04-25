@@ -5,8 +5,6 @@ class Pager
     private $per_page_records;
     private $max_pager_range;
     private $current_page;
-    private $uri;
-    private $params;
 
     public function __construct($total_records, $max_pager_range, $per_page_records)
     {
@@ -66,8 +64,14 @@ class Pager
     }
 
     public function getOffset()
-    {
-        return $this->per_page_records * ($this->current_page - 1);
+    {   
+        $offset = $this->per_page_records * ($this->current_page - 1);
+
+        if ($offset < 0) {
+            return 0;
+        } else {
+            return $offset;
+        }
     }
 
     public function hasPreviousPage()
