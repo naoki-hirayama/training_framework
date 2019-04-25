@@ -1,7 +1,5 @@
 <?php
 
-require_once('../function/Pager.php');
-
 class StatusController extends Controller
 {
     protected $auth_actions = ['index', 'post'];

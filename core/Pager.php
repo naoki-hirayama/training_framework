@@ -98,19 +98,6 @@ class Pager
         return $this->current_page + 1;
     }
 
-    public function setUri($uri, $params = array())
-    {
-        $this->uri = parse_url($uri)['path'];
-        $this->params = $params;
-    }
-
-    public function createUri($page = null)
-    {
-        $this->params['page'] = $page;
-        $uri_params = http_build_query($this->params);
-        return "{$this->uri}?{$uri_params}";
-    }
-
     private function getBothRanges()
     {
         $both_ranges = [];
