@@ -102,7 +102,7 @@ class AccountController extends Controller
 
             if (count($errors) === 0) {
                 $user_repository->changePassword($user['user_name'], $new_password);
-                $user = $this->db_manager->get('User')->fetchByUserName($user['user_name']);
+                $user = $user_repository->fetchByUserName($user['user_name']);
                 $this->session->set('user', $user);
                 
                 $messages[] = "変更しました";
