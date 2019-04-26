@@ -67,6 +67,7 @@ abstract class Controller
      * @param string $layout レイアウトファイル名
      * @return string レンダリングしたビューファイルの内容
      */
+    //
     protected function render($variables = array(), $template = null, $layout = 'layout')
     {
         $defaults = array(

@@ -31,39 +31,45 @@
         <?php endforeach ?>
     </ul>
 <?php endif ?>
+<?php if (isset($errors) && count($errors) > 0) : ?>
+    <?php echo $this->render('errors', array('errors' => $errors)) ?>
+<?php endif ?>
+<?php if (isset($messages) && count($messages) > 0) : ?>
+    <?php echo $this->render('messages', array('messages' => $messages)) ?>
+    <a href="<?php echo $base_url ?>/account/detail">OK</a>
+<?php endif ?>
+<div id="password">
+    <h3>パスワード変更</h3>
+    <form action="<?php echo $base_url ?>/account/detail" method="post">
 
-<h3>パスワード変更</h3>
-<form action="<?php echo $base_url ?>/change/password" method="post">
-    <?php if (isset($errors) && count($errors) > 0) : ?>
-        <?php echo $this->render('errors', array('errors' => $errors)) ?>
-    <?php endif ?>
-    <input type="hidden" name="_token" value="<?php echo $this->escape($_token) ?>">
-    <table>
-        <tbody>
-            <tr>
-                <th>現在のパスワード </th>
-                <td>
-                    <input type="password" name="current_password" value="<?php echo $this->escape($current_password) ?>">
-                </td>
-            </tr>
-            <tr>
-                <th>新しいパスワード</th>
-                <td>
-                    <input type="password" name="new_password" value="<?php echo $this->escape($new_password) ?>">
-                </td>
-            </tr>
-            <tr>
-                <th>確認用パスワード</th>
-                <td>
-                    <input type="password" name="confirm_password" value="<?php echo $this->escape($confirm_password) ?>">
-                </td>
-            </tr>
-            <tr>
-                <th></th>
-                <td>
-                    <input type="submit" value="変更する">
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+        <input type="hidden" name="_token" value="<?php echo $this->escape($_token) ?>">
+        <table>
+            <tbody>
+                <tr>
+                    <th>現在のパスワード </th>
+                    <td>
+                        <input type="password" name="current_password" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <th>新しいパスワード</th>
+                    <td>
+                        <input type="password" name="new_password" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <th>確認用パスワード</th>
+                    <td>
+                        <input type="password" name="confirm_password" value="">
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" value="変更する">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

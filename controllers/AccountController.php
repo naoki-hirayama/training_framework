@@ -2,7 +2,7 @@
 
 class AccountController extends Controller
 {
-    protected $auth_actions = ['index', 'signout', 'follow', 'change_password']; 
+    protected $auth_actions = ['index', 'signout', 'follow']; 
 
     public function signupAction()
     {
@@ -73,12 +73,48 @@ class AccountController extends Controller
     public function indexAction()
     {
         $user = $this->session->get('user');
+        //var_dump($_SESSION);
         $followings = $this->db_manager->get('user')->fetchAllFollowingsByUserId($user['id']);
+        $messages = [];
+        $errors = [];
+        if ($this->request->isPost()) {
+            //post送信された時
+            $user_repository = $this->db_manager->get('User');
 
-        return $this->render(array(
-            'user' => $user,
-            'followings' => $followings,
-        ));
+            $current_password = $this->request->getPost('current_password');
+            $new_password = $this->request->getPost('new_password');
+            $confirm_password = $this->request->getPost('confirm_password');
+            $token = $this->request->getPost('_token');
+
+            if (!$this->checkCsrfToken('account/signin', $token)) {
+                return $this->redirect('/');
+            }
+
+            if ($user['password'] !== $user_repository->hashPassword($current_password)) {
+                $errors[] = "パスワードが間違っています。";
+            } else {
+                if ($new_password !== $confirm_password) {
+                    $errors[] = '確認パスワードが一致しません';
+                } elseif (strlen($new_password) < 4 || strlen($new_password) > 30) {
+                    $errors[] = 'パスワード は４〜30字以内で入力してください';
+                }
+            }
+
+            if (count($errors) === 0) {
+                $user_repository->changePassword($user['user_name'], $new_password);
+                $user = $this->db_manager->get('User')->fetchByUserName($user['user_name']);
+                $this->session->set('user', $user);
+                
+                $messages[] = "変更しました";
+            } 
+        }
+            return $this->render(array(
+                'user' => $user,
+                'followings' => $followings,
+                'messages' => $messages,
+                'errors' => $errors,
+                '_token'    => $this->generateCsrfToken('account/signin'),
+            ));
     }
 
     public function signinAction()
@@ -151,7 +187,7 @@ class AccountController extends Controller
 
         return $this->redirect('/account/signin');
     }
-
+    //フォロー
     public function followAction()
     {
         if (!$this->request->isPost()) {
@@ -184,46 +220,4 @@ class AccountController extends Controller
         return $this->redirect('/account/detail');
     }
 
-    public function changePasswordAction()
-    {
-        if (!$this->request->isPost()) {
-            $this->forward404();
-        }
-
-        $user_repository = $this->db_manager->get('User');
-        $user = $this->session->get('user');
-
-        $current_password = $this->request->getPost('current_password');
-        $new_password = $this->request->getPost('new_password');
-        $confirm_password = $this->request->getPost('confirm_password');
-        //?
-        // $token = $this->request->getPost('_token');
-        // var_dump($token);exit;
-        // if (!$this->checkCsrfToken('change/password', $token)) {
-        //     return $this->redirect('/');
-        // }
-        
-        $errors = [];
-        if ($user['password'] !== $user_repository->hashPassword($current_password)) {
-            $errors[] = "パスワードが間違っています。";
-        } else {
-            if ($new_password !== $confirm_password) {
-                $errors[] = '確認パスワードが一致しません';
-            } elseif (strlen($new_password) < 4 || strlen($new_password) > 30) {
-                $errors[] = 'パスワード は４〜30字以内で入力してください';
-            }
-        }
-        
-        if (count($errors) === 0) {
-            $user_repository->changePassword($user['user_name'], $new_password);
-            return $this->redirect('/account/detail');
-        }
-        //viewでエラー表示
-        return $this->render(array(
-            'errors' => $errors,
-            'password'  => '',
-        ));
-    }
-
-   
 }

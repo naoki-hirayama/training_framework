@@ -27,8 +27,6 @@ class MiniBlogApplication extends Application
             '/account/:action' => array('controller' => 'account'),
 
             '/follow/user' => array('controller' => 'account', 'action' => 'follow'),
-
-            '/change/password' => array('controller' => 'account', 'action' => 'changePassword'),
         );
     }
 
