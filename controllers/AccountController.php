@@ -73,7 +73,8 @@ class AccountController extends Controller
     public function indexAction()
     {
         $user = $this->session->get('user');
-        //var_dump($_SESSION);
+        // var_dump($_SESSION);
+        // var_dump($user);
         $followings = $this->db_manager->get('user')->fetchAllFollowingsByUserId($user['id']);
         $messages = [];
         $errors = [];
@@ -109,11 +110,11 @@ class AccountController extends Controller
             } 
         }
             return $this->render(array(
-                'user' => $user,
+                'user'       => $user,
                 'followings' => $followings,
-                'messages' => $messages,
-                'errors' => $errors,
-                '_token'    => $this->generateCsrfToken('account/signin'),
+                'messages'   => $messages,
+                'errors'     => $errors,
+                '_token'     => $this->generateCsrfToken('account/signin'),
             ));
     }
 
@@ -174,9 +175,9 @@ class AccountController extends Controller
 
         return $this->render(array(
             'user_name' => $user_name,
-            'password' => $password,
-            'errors' => $errors,
-            '_token' => $this->generateCsrfToken('account/signin'),
+            'password'  => $password,
+            'errors'    => $errors,
+            '_token'    => $this->generateCsrfToken('account/signin'),
         ), 'signin');
     }
 
